@@ -233,5 +233,31 @@
   },
   "optionalDependencies": {
     "windows-foreground-love": "0.5.0"
+  },
+  "name": "voice-chat-omni",
+  "displayName": "Omni Voice Chat",
+  "description": "A voice-enabled, emotionally intelligent assistant for VS Code.",
+  "version": "0.1.0",
+  "publisher": "wildhash",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:voiceChat.start"
+  ],
+  "main": "./src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "voiceChat.start",
+        "title": "Chat with Omni"
+      }
+    ]
+  },
+  "dependencies": {
+    "openai": "^3.0.0"
   }
 }
