@@ -7,18 +7,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ShakeLevel = void 0;
-exports.toStringShakeLevel = toStringShakeLevel;
-exports.shake = shake;
+exports.shake = exports.toStringShakeLevel = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const TYPESCRIPT_LIB_FOLDER = path_1.default.dirname(require.resolve('typescript/lib/lib.d.ts'));
-var ShakeLevel;
-(function (ShakeLevel) {
-    ShakeLevel[ShakeLevel["Files"] = 0] = "Files";
-    ShakeLevel[ShakeLevel["InnerFile"] = 1] = "InnerFile";
-    ShakeLevel[ShakeLevel["ClassMembers"] = 2] = "ClassMembers";
-})(ShakeLevel || (exports.ShakeLevel = ShakeLevel = {}));
 function toStringShakeLevel(shakeLevel) {
     switch (shakeLevel) {
         case 0 /* ShakeLevel.Files */:
@@ -29,6 +21,7 @@ function toStringShakeLevel(shakeLevel) {
             return 'ClassMembers (2)';
     }
 }
+exports.toStringShakeLevel = toStringShakeLevel;
 function printDiagnostics(options, diagnostics) {
     for (const diag of diagnostics) {
         let result = '';
@@ -65,6 +58,7 @@ function shake(options) {
     markNodes(ts, languageService, options);
     return generateResult(ts, languageService, options.shakeLevel);
 }
+exports.shake = shake;
 //#region Discovery, LanguageService & Setup
 function createTypeScriptLanguageService(ts, options) {
     // Discover referenced files
@@ -167,10 +161,6 @@ function processLibFiles(ts, options) {
  * A TypeScript language service host
  */
 class TypeScriptLanguageServiceHost {
-    _ts;
-    _libs;
-    _files;
-    _compilerOptions;
     constructor(ts, libs, files, compilerOptions) {
         this._ts = ts;
         this._libs = libs;
@@ -222,14 +212,6 @@ class TypeScriptLanguageServiceHost {
         return path in this._files || path in this._libs;
     }
 }
-//#endregion
-//#region Tree Shaking
-var NodeColor;
-(function (NodeColor) {
-    NodeColor[NodeColor["White"] = 0] = "White";
-    NodeColor[NodeColor["Gray"] = 1] = "Gray";
-    NodeColor[NodeColor["Black"] = 2] = "Black";
-})(NodeColor || (NodeColor = {}));
 function getColor(node) {
     return node.$$$color || 0 /* NodeColor.White */;
 }
@@ -758,8 +740,6 @@ function findSymbolFromHeritageType(ts, checker, type) {
     return null;
 }
 class SymbolImportTuple {
-    symbol;
-    symbolImportNode;
     constructor(symbol, symbolImportNode) {
         this.symbol = symbol;
         this.symbolImportNode = symbolImportNode;

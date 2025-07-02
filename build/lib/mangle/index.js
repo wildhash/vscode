@@ -19,15 +19,9 @@ const workerpool_1 = __importDefault(require("workerpool"));
 const staticLanguageServiceHost_1 = require("./staticLanguageServiceHost");
 const buildfile = require('../../buildfile');
 class ShortIdent {
-    prefix;
-    static _keywords = new Set(['await', 'break', 'case', 'catch', 'class', 'const', 'continue', 'debugger',
-        'default', 'delete', 'do', 'else', 'export', 'extends', 'false', 'finally', 'for', 'function', 'if',
-        'import', 'in', 'instanceof', 'let', 'new', 'null', 'return', 'static', 'super', 'switch', 'this', 'throw',
-        'true', 'try', 'typeof', 'var', 'void', 'while', 'with', 'yield']);
-    static _alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890$_'.split('');
-    _value = 0;
     constructor(prefix) {
         this.prefix = prefix;
+        this._value = 0;
     }
     next(isNameTaken) {
         const candidate = this.prefix + ShortIdent.convert(this._value);
@@ -49,24 +43,18 @@ class ShortIdent {
         return result;
     }
 }
-var FieldType;
-(function (FieldType) {
-    FieldType[FieldType["Public"] = 0] = "Public";
-    FieldType[FieldType["Protected"] = 1] = "Protected";
-    FieldType[FieldType["Private"] = 2] = "Private";
-})(FieldType || (FieldType = {}));
+ShortIdent._keywords = new Set(['await', 'break', 'case', 'catch', 'class', 'const', 'continue', 'debugger',
+    'default', 'delete', 'do', 'else', 'export', 'extends', 'false', 'finally', 'for', 'function', 'if',
+    'import', 'in', 'instanceof', 'let', 'new', 'null', 'return', 'static', 'super', 'switch', 'this', 'throw',
+    'true', 'try', 'typeof', 'var', 'void', 'while', 'with', 'yield']);
+ShortIdent._alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890$_'.split('');
 class ClassData {
-    fileName;
-    node;
-    fields = new Map();
-    replacements;
-    parent;
-    children;
     constructor(fileName, node) {
         // analyse all fields (properties and methods). Find usages of all protected and
         // private ones and keep track of all public ones (to prevent naming collisions)
         this.fileName = fileName;
         this.node = node;
+        this.fields = new Map();
         const candidates = [];
         for (const member of node.members) {
             if (typescript_1.default.isMethodDeclaration(member)) {
@@ -236,7 +224,7 @@ class ClassData {
     }
     // --- parent chaining
     addChild(child) {
-        this.children ??= [];
+        this.children ?? (this.children = []);
         this.children.push(child);
         child.parent = this;
     }
@@ -293,9 +281,6 @@ const skippedExportMangledSymbols = [
     'deactivate',
 ];
 class DeclarationData {
-    fileName;
-    node;
-    replacementName;
     constructor(fileName, node, fileIdents) {
         this.fileName = fileName;
         this.node = node;
@@ -341,16 +326,12 @@ class DeclarationData {
  * 5. Prepare and apply edits
  */
 class Mangler {
-    projectPath;
-    log;
-    config;
-    allClassDataByKey = new Map();
-    allExportedSymbols = new Set();
-    renameWorkerPool;
     constructor(projectPath, log = () => { }, config) {
         this.projectPath = projectPath;
         this.log = log;
         this.config = config;
+        this.allClassDataByKey = new Map();
+        this.allExportedSymbols = new Set();
         this.renameWorkerPool = workerpool_1.default.pool(path_1.default.join(__dirname, 'renameWorker.js'), {
             maxWorkers: 4,
             minWorkers: 'max'

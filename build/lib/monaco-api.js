@@ -7,9 +7,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeclarationResolver = exports.FSProvider = exports.RECIPE_PATH = void 0;
-exports.run3 = run3;
-exports.execute = execute;
+exports.execute = exports.run3 = exports.DeclarationResolver = exports.FSProvider = exports.RECIPE_PATH = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const fancy_log_1 = __importDefault(require("fancy-log"));
@@ -500,17 +498,12 @@ class FSProvider {
 }
 exports.FSProvider = FSProvider;
 class CacheEntry {
-    sourceFile;
-    mtime;
     constructor(sourceFile, mtime) {
         this.sourceFile = sourceFile;
         this.mtime = mtime;
     }
 }
 class DeclarationResolver {
-    _fsProvider;
-    ts;
-    _sourceFileCache;
     constructor(_fsProvider) {
         this._fsProvider = _fsProvider;
         this.ts = require('typescript');
@@ -564,11 +557,8 @@ function run3(resolver) {
     const sourceFileGetter = (moduleId) => resolver.getDeclarationSourceFile(moduleId);
     return _run(resolver.ts, sourceFileGetter);
 }
+exports.run3 = run3;
 class TypeScriptLanguageServiceHost {
-    _ts;
-    _libs;
-    _files;
-    _compilerOptions;
     constructor(ts, libs, files, compilerOptions) {
         this._ts = ts;
         this._libs = libs;
@@ -627,4 +617,5 @@ function execute() {
     }
     return r;
 }
+exports.execute = execute;
 //# sourceMappingURL=monaco-api.js.map

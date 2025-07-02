@@ -14,20 +14,21 @@ var strings;
         });
     }
     strings.format = format;
-})(strings || (exports.strings = strings = {}));
+})(strings = exports.strings || (exports.strings = {}));
 var graph;
 (function (graph) {
     class Node {
-        data;
-        incoming = new Map();
-        outgoing = new Map();
         constructor(data) {
             this.data = data;
+            this.incoming = new Map();
+            this.outgoing = new Map();
         }
     }
     graph.Node = Node;
     class Graph {
-        _nodes = new Map();
+        constructor() {
+            this._nodes = new Map();
+        }
         inertEdge(from, to) {
             const fromNode = this.lookupOrInsertNode(from);
             const toNode = this.lookupOrInsertNode(to);
@@ -92,5 +93,5 @@ var graph;
         }
     }
     graph.Graph = Graph;
-})(graph || (exports.graph = graph = {}));
+})(graph = exports.graph || (exports.graph = {}));
 //# sourceMappingURL=utils.js.map

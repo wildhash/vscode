@@ -7,14 +7,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createStatsStream = createStatsStream;
+exports.createStatsStream = void 0;
 const event_stream_1 = __importDefault(require("event-stream"));
 const fancy_log_1 = __importDefault(require("fancy-log"));
 const ansi_colors_1 = __importDefault(require("ansi-colors"));
 class Entry {
-    name;
-    totalCount;
-    totalSize;
     constructor(name, totalCount, totalSize) {
         this.name = name;
         this.totalCount = totalCount;
@@ -76,4 +73,5 @@ function createStatsStream(group, log) {
         this.emit('end');
     });
 }
+exports.createStatsStream = createStatsStream;
 //# sourceMappingURL=stats.js.map

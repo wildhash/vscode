@@ -1,0 +1,76 @@
+# Source files
+src/**
+!src/typings/**
+
+# Build files
+.vscode/**
+.vscode-test/**
+out/test/**
+
+# Dependencies
+node_modules/**
+
+# Development files
+.eslintrc.json
+.gitattributes
+.gitignore
+.yarnrc
+.yarnrc.yml
+gulpfile.js
+tsconfig.json
+tslint.json
+.eslint-ignore
+.mention-bot
+.nvmrc
+.npmrc
+.mailmap
+.lsifrc.json
+.git-blame-ignore-revs
+.editorconfig
+tsfmt.json
+product.json
+cgmanifest.json
+cglicenses.json
+ThirdPartyNotices.txt
+build/**
+.build/**
+test/**
+scripts/**
+resources/**
+remote/**
+extensions/**
+cli/**
+.github/**
+.devcontainer/**
+.config/**
+.eslint-plugin-local/**
+
+# VS Code workspace files
+*.code-workspace
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# nyc test coverage
+.nyc_output/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

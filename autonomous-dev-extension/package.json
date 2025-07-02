@@ -1,0 +1,153 @@
+{
+  "name": "autonomous-dev-assistant",
+  "displayName": "Autonomous Development Assistant",
+  "description": "Voice-to-voice autonomous software engineering assistant powered by GPT-4o",
+  "version": "0.1.0",
+  "publisher": "wildhash",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "AI",
+    "Chat",
+    "Other"
+  ],
+  "keywords": [
+    "ai",
+    "assistant",
+    "voice",
+    "autonomous",
+    "gpt-4",
+    "chat",
+    "development"
+  ],
+  "activationEvents": [
+    "onCommand:autonomousdev.openChat",
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "autonomousdev.openChat",
+        "title": "Open Voice Assistant",
+        "category": "Autonomous Dev",
+        "icon": "$(comment-discussion)"
+      },
+      {
+        "command": "autonomousdev.toggleVoice",
+        "title": "Toggle Voice Mode",
+        "category": "Autonomous Dev",
+        "icon": "$(mic)"
+      },
+      {
+        "command": "autonomousdev.clearHistory",
+        "title": "Clear Chat History",
+        "category": "Autonomous Dev",
+        "icon": "$(clear-all)"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "autonomousdev",
+          "title": "Autonomous Dev Assistant",
+          "icon": "$(robot)"
+        }
+      ]
+    },
+    "views": {
+      "autonomousdev": [
+        {
+          "id": "autonomousdev.chatView",
+          "name": "Voice Assistant",
+          "type": "webview"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "autonomousdev.openChat",
+        "key": "ctrl+shift+a",
+        "mac": "cmd+shift+a"
+      },
+      {
+        "command": "autonomousdev.toggleVoice",
+        "key": "ctrl+shift+v",
+        "mac": "cmd+shift+v"
+      }
+    ],
+    "configuration": {
+      "title": "Autonomous Dev Assistant",
+      "properties": {
+        "autonomousdev.openaiApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "OpenAI API Key for GPT-4o access"
+        },
+        "autonomousdev.voiceEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable voice input/output"
+        },
+        "autonomousdev.autoSpeak": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically speak responses"
+        },
+        "autonomousdev.voiceSpeed": {
+          "type": "number",
+          "default": 1.0,
+          "minimum": 0.1,
+          "maximum": 3.0,
+          "description": "Speech synthesis speed"
+        },
+        "autonomousdev.voicePitch": {
+          "type": "number",
+          "default": 1.0,
+          "minimum": 0.0,
+          "maximum": 2.0,
+          "description": "Speech synthesis pitch"
+        },
+        "autonomousdev.model": {
+          "type": "string",
+          "default": "gpt-4o",
+          "enum": ["gpt-4o", "gpt-4", "gpt-3.5-turbo"],
+          "description": "OpenAI model to use"
+        },
+        "autonomousdev.maxTokens": {
+          "type": "number",
+          "default": 4096,
+          "description": "Maximum tokens per response"
+        },
+        "autonomousdev.temperature": {
+          "type": "number",
+          "default": 0.7,
+          "minimum": 0.0,
+          "maximum": 2.0,
+          "description": "Response creativity (0 = deterministic, 2 = very creative)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@types/node": "16.x",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "eslint": "^8.28.0",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "openai": "^4.20.0",
+    "axios": "^1.6.0"
+  }
+}

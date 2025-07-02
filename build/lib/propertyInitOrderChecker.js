@@ -19,25 +19,14 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EntryKind = void 0;
 const ts = __importStar(require("typescript"));
 const path = __importStar(require("path"));
 const fs = __importStar(require("fs"));
@@ -230,22 +219,4 @@ function findAllReferences(node) {
     const options = { use: ts.FindAllReferences.FindReferencesUse.References };
     return ts.FindAllReferences.Core.getReferencedSymbolsForNode(position, name, program, [sourceFile], cancellationToken, options) ?? [];
 }
-var DefinitionKind;
-(function (DefinitionKind) {
-    DefinitionKind[DefinitionKind["Symbol"] = 0] = "Symbol";
-    DefinitionKind[DefinitionKind["Label"] = 1] = "Label";
-    DefinitionKind[DefinitionKind["Keyword"] = 2] = "Keyword";
-    DefinitionKind[DefinitionKind["This"] = 3] = "This";
-    DefinitionKind[DefinitionKind["String"] = 4] = "String";
-    DefinitionKind[DefinitionKind["TripleSlashReference"] = 5] = "TripleSlashReference";
-})(DefinitionKind || (DefinitionKind = {}));
-/** @internal */
-var EntryKind;
-(function (EntryKind) {
-    EntryKind[EntryKind["Span"] = 0] = "Span";
-    EntryKind[EntryKind["Node"] = 1] = "Node";
-    EntryKind[EntryKind["StringLiteral"] = 2] = "StringLiteral";
-    EntryKind[EntryKind["SearchedLocalFoundProperty"] = 3] = "SearchedLocalFoundProperty";
-    EntryKind[EntryKind["SearchedPropertyFoundLocal"] = 4] = "SearchedPropertyFoundLocal";
-})(EntryKind || (exports.EntryKind = EntryKind = {}));
 //# sourceMappingURL=propertyInitOrderChecker.js.map

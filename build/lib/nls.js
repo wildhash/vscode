@@ -7,7 +7,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.nls = nls;
+exports.nls = void 0;
 const lazy_js_1 = __importDefault(require("lazy.js"));
 const event_stream_1 = require("event-stream");
 const vinyl_1 = __importDefault(require("vinyl"));
@@ -103,6 +103,7 @@ globalThis._VSCODE_NLS_MESSAGES=${JSON.stringify(_nls.allNLSMessages)};`),
     }));
     return (0, event_stream_1.duplex)(input, output);
 }
+exports.nls = nls;
 function isImportNode(ts, node) {
     return node.kind === ts.SyntaxKind.ImportDeclaration || node.kind === ts.SyntaxKind.ImportEqualsDeclaration;
 }
@@ -128,22 +129,18 @@ var _nls;
         return { line: position.line - 1, character: position.column };
     }
     class SingleFileServiceHost {
-        options;
-        filename;
-        file;
-        lib;
         constructor(ts, options, filename, contents) {
             this.options = options;
             this.filename = filename;
+            this.getCompilationSettings = () => this.options;
+            this.getScriptFileNames = () => [this.filename];
+            this.getScriptVersion = () => '1';
+            this.getScriptSnapshot = (name) => name === this.filename ? this.file : this.lib;
+            this.getCurrentDirectory = () => '';
+            this.getDefaultLibFileName = () => 'lib.d.ts';
             this.file = ts.ScriptSnapshot.fromString(contents);
             this.lib = ts.ScriptSnapshot.fromString('');
         }
-        getCompilationSettings = () => this.options;
-        getScriptFileNames = () => [this.filename];
-        getScriptVersion = () => '1';
-        getScriptSnapshot = (name) => name === this.filename ? this.file : this.lib;
-        getCurrentDirectory = () => '';
-        getDefaultLibFileName = () => 'lib.d.ts';
         readFile(path, _encoding) {
             if (path === this.filename) {
                 return this.file.getText(0, this.file.getLength());
@@ -237,8 +234,6 @@ var _nls;
         };
     }
     class TextModel {
-        lines;
-        lineEndings;
         constructor(contents) {
             const regex = /\r\n|\r|\n/g;
             let index = 0;
@@ -356,7 +351,7 @@ var _nls;
             .map(lc => (options.preserveEnglish ? [
             { range: lc.keySpan, content: `${allNLSMessagesIndex++}` } // localize('key', "message") => localize(<index>, "message")
         ] : [
-            { range: lc.keySpan, content: `${allNLSMessagesIndex++}` }, // localize('key', "message") => localize(<index>, null)
+            { range: lc.keySpan, content: `${allNLSMessagesIndex++}` },
             { range: lc.valueSpan, content: 'null' }
         ]))
             .flatten()

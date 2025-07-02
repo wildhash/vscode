@@ -4,11 +4,12 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeAllTSBoilerplate = removeAllTSBoilerplate;
+exports.removeAllTSBoilerplate = void 0;
 function removeAllTSBoilerplate(source) {
     const seen = new Array(BOILERPLATE.length).fill(true, 0, BOILERPLATE.length);
     return removeDuplicateTSBoilerplate(source, seen);
 }
+exports.removeAllTSBoilerplate = removeAllTSBoilerplate;
 // Taken from typescript compiler => emitFiles
 const BOILERPLATE = [
     { start: /^var __extends/, end: /^}\)\(\);$/ },

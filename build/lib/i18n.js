@@ -7,14 +7,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EXTERNAL_EXTENSIONS = exports.XLF = exports.Line = exports.extraLanguages = exports.defaultLanguages = void 0;
-exports.processNlsFiles = processNlsFiles;
-exports.getResource = getResource;
-exports.createXlfFilesForCoreBundle = createXlfFilesForCoreBundle;
-exports.createXlfFilesForExtensions = createXlfFilesForExtensions;
-exports.createXlfFilesForIsl = createXlfFilesForIsl;
-exports.prepareI18nPackFiles = prepareI18nPackFiles;
-exports.prepareIslFiles = prepareIslFiles;
+exports.prepareIslFiles = exports.prepareI18nPackFiles = exports.createXlfFilesForIsl = exports.createXlfFilesForExtensions = exports.EXTERNAL_EXTENSIONS = exports.createXlfFilesForCoreBundle = exports.getResource = exports.processNlsFiles = exports.XLF = exports.Line = exports.extraLanguages = exports.defaultLanguages = void 0;
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const event_stream_1 = require("event-stream");
@@ -79,8 +72,8 @@ var NLSKeysFormat;
     NLSKeysFormat.is = is;
 })(NLSKeysFormat || (NLSKeysFormat = {}));
 class Line {
-    buffer = [];
     constructor(indent = 0) {
+        this.buffer = [];
         if (indent > 0) {
             this.buffer.push(new Array(indent + 1).join(' '));
         }
@@ -95,7 +88,6 @@ class Line {
 }
 exports.Line = Line;
 class TextModel {
-    _lines;
     constructor(contents) {
         this._lines = contents.split(/\r\n|\r|\n/);
     }
@@ -104,10 +96,6 @@ class TextModel {
     }
 }
 class XLF {
-    project;
-    buffer;
-    files;
-    numberOfMessages;
     constructor(project) {
         this.project = project;
         this.buffer = [];
@@ -189,55 +177,55 @@ class XLF {
         line.append(content);
         this.buffer.push(line.toString());
     }
-    static parse = function (xlfString) {
-        return new Promise((resolve, reject) => {
-            const parser = new xml2js_1.default.Parser();
-            const files = [];
-            parser.parseString(xlfString, function (err, result) {
-                if (err) {
-                    reject(new Error(`XLF parsing error: Failed to parse XLIFF string. ${err}`));
-                }
-                const fileNodes = result['xliff']['file'];
-                if (!fileNodes) {
-                    reject(new Error(`XLF parsing error: XLIFF file does not contain "xliff" or "file" node(s) required for parsing.`));
-                }
-                fileNodes.forEach((file) => {
-                    const name = file.$.original;
-                    if (!name) {
-                        reject(new Error(`XLF parsing error: XLIFF file node does not contain original attribute to determine the original location of the resource file.`));
-                    }
-                    const language = file.$['target-language'];
-                    if (!language) {
-                        reject(new Error(`XLF parsing error: XLIFF file node does not contain target-language attribute to determine translated language.`));
-                    }
-                    const messages = {};
-                    const transUnits = file.body[0]['trans-unit'];
-                    if (transUnits) {
-                        transUnits.forEach((unit) => {
-                            const key = unit.$.id;
-                            if (!unit.target) {
-                                return; // No translation available
-                            }
-                            let val = unit.target[0];
-                            if (typeof val !== 'string') {
-                                // We allow empty source values so support them for translations as well.
-                                val = val._ ? val._ : '';
-                            }
-                            if (!key) {
-                                reject(new Error(`XLF parsing error: trans-unit ${JSON.stringify(unit, undefined, 0)} defined in file ${name} is missing the ID attribute.`));
-                                return;
-                            }
-                            messages[key] = decodeEntities(val);
-                        });
-                        files.push({ messages, name, language: language.toLowerCase() });
-                    }
-                });
-                resolve(files);
-            });
-        });
-    };
 }
 exports.XLF = XLF;
+XLF.parse = function (xlfString) {
+    return new Promise((resolve, reject) => {
+        const parser = new xml2js_1.default.Parser();
+        const files = [];
+        parser.parseString(xlfString, function (err, result) {
+            if (err) {
+                reject(new Error(`XLF parsing error: Failed to parse XLIFF string. ${err}`));
+            }
+            const fileNodes = result['xliff']['file'];
+            if (!fileNodes) {
+                reject(new Error(`XLF parsing error: XLIFF file does not contain "xliff" or "file" node(s) required for parsing.`));
+            }
+            fileNodes.forEach((file) => {
+                const name = file.$.original;
+                if (!name) {
+                    reject(new Error(`XLF parsing error: XLIFF file node does not contain original attribute to determine the original location of the resource file.`));
+                }
+                const language = file.$['target-language'];
+                if (!language) {
+                    reject(new Error(`XLF parsing error: XLIFF file node does not contain target-language attribute to determine translated language.`));
+                }
+                const messages = {};
+                const transUnits = file.body[0]['trans-unit'];
+                if (transUnits) {
+                    transUnits.forEach((unit) => {
+                        const key = unit.$.id;
+                        if (!unit.target) {
+                            return; // No translation available
+                        }
+                        let val = unit.target[0];
+                        if (typeof val !== 'string') {
+                            // We allow empty source values so support them for translations as well.
+                            val = val._ ? val._ : '';
+                        }
+                        if (!key) {
+                            reject(new Error(`XLF parsing error: trans-unit ${JSON.stringify(unit, undefined, 0)} defined in file ${name} is missing the ID attribute.`));
+                            return;
+                        }
+                        messages[key] = decodeEntities(val);
+                    });
+                    files.push({ messages, name, language: language.toLowerCase() });
+                }
+            });
+            resolve(files);
+        });
+    });
+};
 function sortLanguages(languages) {
     return languages.sort((a, b) => {
         return a.id < b.id ? -1 : (a.id > b.id ? 1 : 0);
@@ -334,6 +322,7 @@ function processNlsFiles(opts) {
         this.queue(file);
     });
 }
+exports.processNlsFiles = processNlsFiles;
 const editorProject = 'vscode-editor', workbenchProject = 'vscode-workbench', extensionsProject = 'vscode-extensions', setupProject = 'vscode-setup', serverProject = 'vscode-server';
 function getResource(sourceFile) {
     let resource;
@@ -368,6 +357,7 @@ function getResource(sourceFile) {
     }
     throw new Error(`Could not identify the XLF bundle for ${sourceFile}`);
 }
+exports.getResource = getResource;
 function createXlfFilesForCoreBundle() {
     return (0, event_stream_1.through)(function (file) {
         const basename = path_1.default.basename(file.path);
@@ -415,6 +405,7 @@ function createXlfFilesForCoreBundle() {
         }
     });
 }
+exports.createXlfFilesForCoreBundle = createXlfFilesForCoreBundle;
 function createL10nBundleForExtension(extensionFolderName, prefixWithBuildFolder) {
     const prefix = prefixWithBuildFolder ? '.build/' : '';
     return gulp_1.default
@@ -561,6 +552,7 @@ function createXlfFilesForExtensions() {
         }
     });
 }
+exports.createXlfFilesForExtensions = createXlfFilesForExtensions;
 function createXlfFilesForIsl() {
     return (0, event_stream_1.through)(function (file) {
         let projectName, resourceFile;
@@ -611,6 +603,7 @@ function createXlfFilesForIsl() {
         this.queue(xlfFile);
     });
 }
+exports.createXlfFilesForIsl = createXlfFilesForIsl;
 function createI18nFile(name, messages) {
     const result = Object.create(null);
     result[''] = [
@@ -699,6 +692,7 @@ function prepareI18nPackFiles(resultingTranslationPaths) {
         });
     });
 }
+exports.prepareI18nPackFiles = prepareI18nPackFiles;
 function prepareIslFiles(language, innoSetupConfig) {
     const parsePromises = [];
     return (0, event_stream_1.through)(function (xlf) {
@@ -721,6 +715,7 @@ function prepareIslFiles(language, innoSetupConfig) {
         });
     });
 }
+exports.prepareIslFiles = prepareIslFiles;
 function createIslFile(name, messages, language, innoSetup) {
     const content = [];
     let originalContent;

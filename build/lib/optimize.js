@@ -19,29 +19,18 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.bundleTask = bundleTask;
-exports.minifyTask = minifyTask;
+exports.minifyTask = exports.bundleTask = void 0;
 const event_stream_1 = __importDefault(require("event-stream"));
 const gulp_1 = __importDefault(require("gulp"));
 const gulp_filter_1 = __importDefault(require("gulp-filter"));
@@ -120,8 +109,8 @@ function bundleESMTask(opts) {
             };
             const task = esbuild_1.default.build({
                 bundle: true,
-                packages: 'external', // "external all the things", see https://esbuild.github.io/api/#packages
-                platform: 'neutral', // makes esm
+                packages: 'external',
+                platform: 'neutral',
                 format: 'esm',
                 sourcemap: 'external',
                 plugins: [contentsMapper, externalOverride],
@@ -132,8 +121,8 @@ function bundleESMTask(opts) {
                     '.png': 'file',
                     '.sh': 'file',
                 },
-                assetNames: 'media/[name]', // moves media assets into a sub-folder "media"
-                banner: entryPoint.name === 'vs/workbench/workbench.web.main' ? undefined : banner, // TODO@esm remove line when we stop supporting web-amd-esm-bridge
+                assetNames: 'media/[name]',
+                banner: entryPoint.name === 'vs/workbench/workbench.web.main' ? undefined : banner,
                 entryPoints: [
                     {
                         in: path_1.default.join(REPO_ROOT_PATH, opts.src, `${entryPoint.name}.js`),
@@ -141,7 +130,7 @@ function bundleESMTask(opts) {
                     }
                 ],
                 outdir: path_1.default.join(REPO_ROOT_PATH, opts.src),
-                write: false, // enables res.outputFiles
+                write: false,
                 metafile: true, // enables res.metafile
                 // minify: NOT enabled because we have a separate minify task that takes care of the TSLib banner as well
             }).then(res => {
@@ -152,7 +141,7 @@ function bundleESMTask(opts) {
                     }
                     const fileProps = {
                         contents: Buffer.from(file.contents),
-                        sourceMap: sourceMapFile ? JSON.parse(sourceMapFile.text) : undefined, // support gulp-sourcemaps
+                        sourceMap: sourceMapFile ? JSON.parse(sourceMapFile.text) : undefined,
                         path: file.path,
                         base: path_1.default.join(REPO_ROOT_PATH, opts.src)
                     };
@@ -183,6 +172,7 @@ function bundleTask(opts) {
         return bundleESMTask(opts.esm).pipe(gulp_1.default.dest(opts.out));
     };
 }
+exports.bundleTask = bundleTask;
 function minifyTask(src, sourceMapBaseUrl) {
     const sourceMappingURL = sourceMapBaseUrl ? ((f) => `${sourceMapBaseUrl}/${f.relative}.map`) : undefined;
     return cb => {
@@ -195,8 +185,8 @@ function minifyTask(src, sourceMapBaseUrl) {
                 minify: true,
                 sourcemap: 'external',
                 outdir: '.',
-                packages: 'external', // "external all the things", see https://esbuild.github.io/api/#packages
-                platform: 'neutral', // makes esm
+                packages: 'external',
+                platform: 'neutral',
                 target: ['es2022'],
                 write: false,
             }).then(res => {
@@ -221,4 +211,5 @@ function minifyTask(src, sourceMapBaseUrl) {
         }), gulp_1.default.dest(src + '-min'), (err) => cb(err));
     };
 }
+exports.minifyTask = minifyTask;
 //# sourceMappingURL=optimize.js.map

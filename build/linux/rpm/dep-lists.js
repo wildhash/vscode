@@ -8,7 +8,7 @@ exports.referenceGeneratedDepsByArch = exports.additionalDeps = void 0;
 // Based on https://source.chromium.org/chromium/chromium/src/+/main:chrome/installer/linux/rpm/additional_deps
 // Additional dependencies not in the rpm find-requires output.
 exports.additionalDeps = [
-    'ca-certificates', // Make sure users have SSL certificates.
+    'ca-certificates',
     'libgtk-3.so.0()(64bit)',
     'libnss3.so(NSS_3.22)(64bit)',
     'libssl3.so(NSS_3.28)(64bit)',

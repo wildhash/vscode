@@ -7,8 +7,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.e = e;
-exports.requestAZDOAPI = requestAZDOAPI;
+exports.requestAZDOAPI = exports.e = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const stream_1 = require("stream");
@@ -31,6 +30,7 @@ function e(name) {
     }
     return result;
 }
+exports.e = e;
 function hashStream(hashName, stream) {
     return new Promise((c, e) => {
         const shasum = crypto_1.default.createHash(hashName);
@@ -40,16 +40,6 @@ function hashStream(hashName, stream) {
             .on('close', () => c(shasum.digest()));
     });
 }
-var StatusCode;
-(function (StatusCode) {
-    StatusCode["Pass"] = "pass";
-    StatusCode["Aborted"] = "aborted";
-    StatusCode["Inprogress"] = "inprogress";
-    StatusCode["FailCanRetry"] = "failCanRetry";
-    StatusCode["FailDoNotRetry"] = "failDoNotRetry";
-    StatusCode["PendingAnalysis"] = "pendingAnalysis";
-    StatusCode["Cancelled"] = "cancelled";
-})(StatusCode || (StatusCode = {}));
 function getCertificateBuffer(input) {
     return Buffer.from(input.replace(/-----BEGIN CERTIFICATE-----|-----END CERTIFICATE-----|\n/g, ''), 'base64');
 }
@@ -90,13 +80,6 @@ function getCertificatesFromPFX(pfx) {
     }
 }
 class ESRPReleaseService {
-    log;
-    clientId;
-    accessToken;
-    requestSigningCertificates;
-    requestSigningKey;
-    containerClient;
-    stagingSasToken;
     static async create(log, tenantId, clientId, authCertificatePfx, requestSigningCertificatePfx, containerClient, stagingSasToken) {
         const authKey = getKeyFromPFX(authCertificatePfx);
         const authCertificate = getCertificatesFromPFX(authCertificatePfx)[0];
@@ -118,7 +101,6 @@ class ESRPReleaseService {
         });
         return new ESRPReleaseService(log, clientId, response.accessToken, requestSigningCertificates, requestSigningKey, containerClient, stagingSasToken);
     }
-    static API_URL = 'https://api.esrp.microsoft.com/api/v3/releaseservices/clients/';
     constructor(log, clientId, accessToken, requestSigningCertificates, requestSigningKey, containerClient, stagingSasToken) {
         this.log = log;
         this.clientId = clientId;
@@ -271,10 +253,10 @@ class ESRPReleaseService {
         });
     }
 }
+ESRPReleaseService.API_URL = 'https://api.esrp.microsoft.com/api/v3/releaseservices/clients/';
 class State {
-    statePath;
-    set = new Set();
     constructor() {
+        this.set = new Set();
         const pipelineWorkspacePath = e('PIPELINE_WORKSPACE');
         const previousState = fs_1.default.readdirSync(pipelineWorkspacePath)
             .map(name => /^artifacts_processed_(\d+)$/.exec(name))
@@ -329,6 +311,7 @@ async function requestAZDOAPI(path) {
         clearTimeout(timeout);
     }
 }
+exports.requestAZDOAPI = requestAZDOAPI;
 async function getPipelineArtifacts() {
     const result = await requestAZDOAPI('artifacts');
     return result.value.filter(a => /^vscode_/.test(a.name) && !/sbom$/.test(a.name));
@@ -503,7 +486,7 @@ async function withLease(client, fn) {
                             (0, node_timers_1.clearInterval)(interval);
                             e(new Error('Failed to renew lease ' + err));
                         });
-                    }, 30_000);
+                    }, 30000);
                 });
                 const result = await Promise.race([fn(), refresher]);
                 abortController.abort();
@@ -679,7 +662,7 @@ async function main() {
             operations.push({ name: artifact.name, operation });
             resultPromise = Promise.allSettled(operations.map(o => o.operation));
         }
-        await new Promise(c => setTimeout(c, 10_000));
+        await new Promise(c => setTimeout(c, 10000));
     }
     console.log(`Found all ${done.size + processing.size} artifacts, waiting for ${processing.size} artifacts to finish publishing...`);
     const artifactsInProgress = operations.filter(o => processing.has(o.name));

@@ -7,15 +7,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Temp = void 0;
-exports.main = main;
+exports.main = exports.Temp = void 0;
 const child_process_1 = __importDefault(require("child_process"));
 const fs_1 = __importDefault(require("fs"));
 const crypto_1 = __importDefault(require("crypto"));
 const path_1 = __importDefault(require("path"));
 const os_1 = __importDefault(require("os"));
 class Temp {
-    _files = [];
+    constructor() {
+        this._files = [];
+    }
     tmpNameSync() {
         const file = path_1.default.join(os_1.default.tmpdir(), crypto_1.default.randomBytes(20).toString('hex'));
         this._files.push(file);
@@ -199,6 +200,7 @@ function main([esrpCliPath, type, folderPath, pattern]) {
         process.exit(1);
     }
 }
+exports.main = main;
 if (require.main === module) {
     main(process.argv.slice(2));
     process.exit(0);

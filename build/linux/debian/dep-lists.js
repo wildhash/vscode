@@ -8,10 +8,10 @@ exports.referenceGeneratedDepsByArch = exports.recommendedDeps = exports.additio
 // Based on https://source.chromium.org/chromium/chromium/src/+/main:chrome/installer/linux/debian/additional_deps
 // Additional dependencies not in the dpkg-shlibdeps output.
 exports.additionalDeps = [
-    'ca-certificates', // Make sure users have SSL certificates.
+    'ca-certificates',
     'libgtk-3-0 (>= 3.9.10) | libgtk-4-1',
     'libnss3 (>= 3.26)',
-    'libcurl3-gnutls | libcurl3-nss | libcurl4 | libcurl3', // For Breakpad crash reports.
+    'libcurl3-gnutls | libcurl3-nss | libcurl4 | libcurl3',
     'xdg-utils (>= 1.0.2)', // OS integration
 ];
 // Based on https://source.chromium.org/chromium/chromium/src/+/main:chrome/installer/linux/debian/manual_recommends

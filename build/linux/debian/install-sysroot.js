@@ -7,8 +7,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getVSCodeSysroot = getVSCodeSysroot;
-exports.getChromiumSysroot = getChromiumSysroot;
+exports.getChromiumSysroot = exports.getVSCodeSysroot = void 0;
 const child_process_1 = require("child_process");
 const os_1 = require("os");
 const fs_1 = __importDefault(require("fs"));
@@ -168,6 +167,7 @@ async function getVSCodeSysroot(arch, isMusl = false) {
     fs_1.default.writeFileSync(stamp, expectedName);
     return result;
 }
+exports.getVSCodeSysroot = getVSCodeSysroot;
 async function getChromiumSysroot(arch) {
     const sysrootJSONUrl = `https://raw.githubusercontent.com/electron/electron/v${getElectronVersion().electronVersion}/script/sysroots.json`;
     const sysrootDictLocation = `${(0, os_1.tmpdir)()}/sysroots.json`;
@@ -225,4 +225,5 @@ async function getChromiumSysroot(arch) {
     fs_1.default.writeFileSync(stamp, url);
     return sysroot;
 }
+exports.getChromiumSysroot = getChromiumSysroot;
 //# sourceMappingURL=install-sysroot.js.map

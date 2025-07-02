@@ -60,12 +60,6 @@ function renderProfileString(_prefix, moduleName, nlsString, translations) {
     return value;
 }
 class BasePolicy {
-    type;
-    name;
-    category;
-    minimumVersion;
-    description;
-    moduleName;
     constructor(type, name, category, minimumVersion, description, moduleName) {
         this.type = type;
         this.name = name;
@@ -149,7 +143,6 @@ class ParseError extends Error {
     }
 }
 class NumberPolicy extends BasePolicy {
-    defaultValue;
     static from(name, category, minimumVersion, description, moduleName, settingNode) {
         const type = getStringProperty(moduleName, settingNode, 'type');
         if (type !== 'number') {
@@ -258,8 +251,6 @@ class ObjectPolicy extends BasePolicy {
     }
 }
 class StringEnumPolicy extends BasePolicy {
-    enum_;
-    enumDescriptions;
     static from(name, category, minimumVersion, description, moduleName, settingNode) {
         const type = getStringProperty(moduleName, settingNode, 'type');
         if (type !== 'string') {

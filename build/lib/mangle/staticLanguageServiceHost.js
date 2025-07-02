@@ -11,11 +11,16 @@ exports.StaticLanguageServiceHost = void 0;
 const typescript_1 = __importDefault(require("typescript"));
 const path_1 = __importDefault(require("path"));
 class StaticLanguageServiceHost {
-    projectPath;
-    _cmdLine;
-    _scriptSnapshots = new Map();
     constructor(projectPath) {
         this.projectPath = projectPath;
+        this._scriptSnapshots = new Map();
+        this.directoryExists = typescript_1.default.sys.directoryExists;
+        this.getDirectories = typescript_1.default.sys.getDirectories;
+        this.fileExists = typescript_1.default.sys.fileExists;
+        this.readFile = typescript_1.default.sys.readFile;
+        this.readDirectory = typescript_1.default.sys.readDirectory;
+        // this is necessary to make source references work.
+        this.realpath = typescript_1.default.sys.realpath;
         const existingOptions = {};
         const parsed = typescript_1.default.readConfigFile(projectPath, typescript_1.default.sys.readFile);
         if (parsed.error) {
@@ -56,13 +61,6 @@ class StaticLanguageServiceHost {
     getDefaultLibFileName(options) {
         return typescript_1.default.getDefaultLibFilePath(options);
     }
-    directoryExists = typescript_1.default.sys.directoryExists;
-    getDirectories = typescript_1.default.sys.getDirectories;
-    fileExists = typescript_1.default.sys.fileExists;
-    readFile = typescript_1.default.sys.readFile;
-    readDirectory = typescript_1.default.sys.readDirectory;
-    // this is necessary to make source references work.
-    realpath = typescript_1.default.sys.realpath;
 }
 exports.StaticLanguageServiceHost = StaticLanguageServiceHost;
 //# sourceMappingURL=staticLanguageServiceHost.js.map

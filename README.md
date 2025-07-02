@@ -1,79 +1,283 @@
-# Visual Studio Code - Open Source ("Code - OSS")
+# 🧠 Digital Intelligence Backend
 
-[![Feature Requests](https://img.shields.io/github/issues/microsoft/vscode/feature-request.svg)](https://github.com/microsoft/vscode/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc)
-[![Bugs](https://img.shields.io/github/issues/microsoft/vscode/bug.svg)](https://github.com/microsoft/vscode/issues?utf8=✓&q=is%3Aissue+is%3Aopen+label%3Abug)
-[![Gitter](https://img.shields.io/badge/chat-on%20gitter-yellow.svg)](https://gitter.im/Microsoft/vscode)
+Centralized backend for the Digital Intelligence Entity - enabling persistent memory, cross-platform sessions, and GPT-4o integration across all platforms.
 
-## The Repository
+## 🚀 Features
 
-This repository ("`Code - OSS`") is where we (Microsoft) develop the [Visual Studio Code](https://code.visualstudio.com) product together with the community. Not only do we work on code and issues here, we also publish our [roadmap](https://github.com/microsoft/vscode/wiki/Roadmap), [monthly iteration plans](https://github.com/microsoft/vscode/wiki/Iteration-Plans), and our [endgame plans](https://github.com/microsoft/vscode/wiki/Running-the-Endgame). This source code is available to everyone under the standard [MIT license](https://github.com/microsoft/vscode/blob/main/LICENSE.txt).
+- **🔄 Cross-Platform Sessions** - Same AI entity across VS Code, Web, and Mobile
+- **🧠 Persistent Memory** - AI remembers conversations, preferences, and context
+- **⚡ Real-Time Streaming** - WebSocket-based voice and text interaction
+- **🎯 Context Injection** - Workspace info and memories in every response
+- **👥 Multi-User Support** - Individual profiles and learning patterns
+- **🔒 Secure & Scalable** - Production-ready with proper authentication
 
-## Visual Studio Code
+## 🛠️ Quick Start
 
-<p align="center">
-  <img alt="VS Code in action" src="https://user-images.githubusercontent.com/35271042/118224532-3842c400-b438-11eb-923d-a5f66fa6785a.png">
-</p>
+### 1. Environment Setup
 
-[Visual Studio Code](https://code.visualstudio.com) is a distribution of the `Code - OSS` repository with Microsoft-specific customizations released under a traditional [Microsoft product license](https://code.visualstudio.com/License/).
+```bash
+# Clone and install
+git clone <your-repo>
+cd digital-intelligence-backend
+npm install
 
-[Visual Studio Code](https://code.visualstudio.com) combines the simplicity of a code editor with what developers need for their core edit-build-debug cycle. It provides comprehensive code editing, navigation, and understanding support along with lightweight debugging, a rich extensibility model, and lightweight integration with existing tools.
+# Create environment file
+cp .env.example .env
+```
 
-Visual Studio Code is updated monthly with new features and bug fixes. You can download it for Windows, macOS, and Linux on [Visual Studio Code's website](https://code.visualstudio.com/Download). To get the latest releases every day, install the [Insiders build](https://code.visualstudio.com/insiders).
+### 2. Configure Environment
 
-## Contributing
+Edit `.env` with your settings:
 
-There are many ways in which you can participate in this project, for example:
+```env
+# Required
+OPENAI_API_KEY=your_openai_api_key_here
 
-* [Submit bugs and feature requests](https://github.com/microsoft/vscode/issues), and help us verify as they are checked in
-* Review [source code changes](https://github.com/microsoft/vscode/pulls)
-* Review the [documentation](https://github.com/microsoft/vscode-docs) and make pull requests for anything from typos to additional and new content
+# Database (MongoDB)
+MONGODB_URI=mongodb://localhost:27017/digital-intelligence
 
-If you are interested in fixing issues and contributing directly to the code base,
-please see the document [How to Contribute](https://github.com/microsoft/vscode/wiki/How-to-Contribute), which covers the following:
+# Server
+PORT=3001
+HOST=localhost
+NODE_ENV=development
+```
 
-* [How to build and run from source](https://github.com/microsoft/vscode/wiki/How-to-Contribute)
-* [The development workflow, including debugging and running tests](https://github.com/microsoft/vscode/wiki/How-to-Contribute#debugging)
-* [Coding guidelines](https://github.com/microsoft/vscode/wiki/Coding-Guidelines)
-* [Submitting pull requests](https://github.com/microsoft/vscode/wiki/How-to-Contribute#pull-requests)
-* [Finding an issue to work on](https://github.com/microsoft/vscode/wiki/How-to-Contribute#where-to-contribute)
-* [Contributing to translations](https://aka.ms/vscodeloc)
+### 3. Start Services
 
-## Feedback
+```bash
+# Start MongoDB (if local)
+mongod
 
-* Ask a question on [Stack Overflow](https://stackoverflow.com/questions/tagged/vscode)
-* [Request a new feature](CONTRIBUTING.md)
-* Upvote [popular feature requests](https://github.com/microsoft/vscode/issues?q=is%3Aopen+is%3Aissue+label%3Afeature-request+sort%3Areactions-%2B1-desc)
-* [File an issue](https://github.com/microsoft/vscode/issues)
-* Connect with the extension author community on [GitHub Discussions](https://github.com/microsoft/vscode-discussions/discussions) or [Slack](https://aka.ms/vscode-dev-community)
-* Follow [@code](https://twitter.com/code) and let us know what you think!
+# Start backend in development mode
+npm run dev
 
-See our [wiki](https://github.com/microsoft/vscode/wiki/Feedback-Channels) for a description of each of these channels and information on some other available community-driven channels.
+# Or build and start production
+npm run build
+npm start
+```
 
-## Related Projects
+### 4. Verify Installation
 
-Many of the core components and extensions to VS Code live in their own repositories on GitHub. For example, the [node debug adapter](https://github.com/microsoft/vscode-node-debug) and the [mono debug adapter](https://github.com/microsoft/vscode-mono-debug) repositories are separate from each other. For a complete list, please visit the [Related Projects](https://github.com/microsoft/vscode/wiki/Related-Projects) page on our [wiki](https://github.com/microsoft/vscode/wiki).
+Visit: `http://localhost:3001/health`
 
-## Bundled Extensions
+Expected response:
+```json
+{
+  "status": "ok",
+  "services": {
+    "mongodb": "healthy",
+    "openai": "healthy"
+  }
+}
+```
 
-VS Code includes a set of built-in extensions located in the [extensions](extensions) folder, including grammars and snippets for many languages. Extensions that provide rich language support (code completion, Go to Definition) for a language have the suffix `language-features`. For example, the `json` extension provides coloring for `JSON` and the `json-language-features` extension provides rich language support for `JSON`.
+## 📡 API Endpoints
 
-## Development Container
+### REST API
 
-This repository includes a Visual Studio Code Dev Containers / GitHub Codespaces development container.
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/health` | Health check and service status |
+| `GET` | `/api/sessions/:userId/:platform` | Get active session |
+| `POST` | `/api/sessions` | Create new session |
+| `POST` | `/api/chat` | Send message (non-streaming) |
+| `GET` | `/api/stats` | Storage statistics |
 
-* For [Dev Containers](https://aka.ms/vscode-remote/download/containers), use the **Dev Containers: Clone Repository in Container Volume...** command which creates a Docker volume for better disk I/O on macOS and Windows.
-  * If you already have VS Code and Docker installed, you can also click [here](https://vscode.dev/redirect?url=vscode://ms-vscode-remote.remote-containers/cloneInVolume?url=https://github.com/microsoft/vscode) to get started. This will cause VS Code to automatically install the Dev Containers extension if needed, clone the source code into a container volume, and spin up a dev container for use.
+### WebSocket Events
 
-* For Codespaces, install the [GitHub Codespaces](https://marketplace.visualstudio.com/items?itemName=GitHub.codespaces) extension in VS Code, and use the **Codespaces: Create New Codespace** command.
+| Event | Direction | Description |
+|-------|-----------|-------------|
+| `join_session` | Client → Server | Join a conversation session |
+| `chat_stream` | Client → Server | Send streaming message |
+| `update_context` | Client → Server | Update session context |
+| `assistant_chunk` | Server → Client | Streaming response chunk |
+| `assistant_message` | Server → Client | Complete response |
+| `user_message` | Server → Client | Broadcast user message |
 
-Docker / the Codespace should have at least **4 Cores and 6 GB of RAM (8 GB recommended)** to run full build. See the [development container README](.devcontainer/README.md) for more information.
+## 🔗 VS Code Extension Integration
 
-## Code of Conduct
+Replace the OpenAI service in your VS Code extension:
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+```typescript
+// services/backendService.ts
+import axios from 'axios';
+import { io, Socket } from 'socket.io-client';
 
-## License
+export class BackendService {
+  private socket: Socket;
+  private baseUrl = 'http://localhost:3001';
 
-Copyright (c) Microsoft Corporation. All rights reserved.
+  constructor() {
+    this.socket = io(this.baseUrl);
+  }
 
-Licensed under the [MIT](LICENSE.txt) license.
+  async createSession(userId: string, workspaceInfo?: any) {
+    const response = await axios.post(`${this.baseUrl}/api/sessions`, {
+      userId,
+      platform: 'vscode',
+      workspaceInfo
+    });
+    return response.data;
+  }
+
+  async sendStreamingMessage(
+    sessionId: string,
+    message: string,
+    isVoice: boolean,
+    onChunk: (chunk: string) => void,
+    onComplete: () => void
+  ) {
+    this.socket.emit('join_session', { sessionId, userId: 'user_id' });
+
+    this.socket.on('assistant_chunk', (data) => {
+      if (!data.isComplete) {
+        onChunk(data.content);
+      } else {
+        onComplete();
+      }
+    });
+
+    this.socket.emit('chat_stream', {
+      sessionId,
+      message,
+      isVoice
+    });
+  }
+}
+```
+
+## 🌐 Web App Integration
+
+Connect your React/Next.js app:
+
+```javascript
+// hooks/useDigitalIntelligence.js
+import { io } from 'socket.io-client';
+
+export function useDigitalIntelligence() {
+  const socket = io('http://localhost:3001');
+
+  const sendMessage = (sessionId, message, isVoice) => {
+    socket.emit('chat_stream', { sessionId, message, isVoice });
+  };
+
+  const onMessage = (callback) => {
+    socket.on('assistant_chunk', callback);
+  };
+
+  return { sendMessage, onMessage };
+}
+```
+
+## 🗄️ Database Schema
+
+### Conversation Sessions
+```typescript
+{
+  sessionId: string;
+  userId: string;
+  platform: 'vscode' | 'web' | 'mobile';
+  messages: Message[];
+  workspaceInfo?: {
+    name: string;
+    path: string;
+    activeFiles: string[];
+    projectType: string;
+  };
+  emotionalState: 'neutral' | 'helpful' | 'excited' | 'focused';
+  metrics: {
+    totalTokensUsed: number;
+    averageResponseTime: number;
+    actionsExecuted: number;
+  };
+}
+```
+
+### AI Memory Entries
+```typescript
+{
+  userId: string;
+  type: 'fact' | 'preference' | 'pattern' | 'context';
+  content: string;
+  importance: number; // 1-10
+  confidence: number; // 0-1
+  tags: string[];
+}
+```
+
+## 🔧 Development
+
+### Project Structure
+```
+src/
+├── server.ts              # Main Express + WebSocket server
+├── config/
+│   └── environment.ts     # Environment configuration
+├── models/
+│   └── conversation.ts    # Data models and schemas
+└── services/
+    ├── openaiProxy.ts     # GPT-4o integration with memory
+    └── memoryStore.ts     # MongoDB session management
+```
+
+### Available Scripts
+```bash
+npm run dev          # Development with hot reload
+npm run build        # Build TypeScript to JavaScript
+npm start           # Start production server
+npm run test        # Run tests (when implemented)
+```
+
+### Environment Variables
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `OPENAI_API_KEY` | ✅ | - | OpenAI API key for GPT-4o |
+| `MONGODB_URI` | ❌ | `mongodb://localhost:27017/digital-intelligence` | MongoDB connection string |
+| `PORT` | ❌ | `3001` | Server port |
+| `NODE_ENV` | ❌ | `development` | Environment mode |
+| `CORS_ORIGINS` | ❌ | `http://localhost:3000,vscode://` | Allowed CORS origins |
+
+## 🚀 Deployment
+
+### Docker Deployment
+```dockerfile
+# Dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY dist ./dist
+EXPOSE 3001
+CMD ["npm", "start"]
+```
+
+### Production Checklist
+- [ ] Set strong `JWT_SECRET`
+- [ ] Configure production MongoDB
+- [ ] Set up proper CORS origins
+- [ ] Enable request rate limiting
+- [ ] Configure logging and monitoring
+- [ ] Set up SSL/TLS certificates
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## 📄 License
+
+MIT License - Built with ❤️ for the Digital Intelligence revolution
+
+## 🆘 Support
+
+- **Issues**: GitHub Issues
+- **Docs**: See `/docs` folder
+- **Health Check**: `GET /health`
+
+---
+
+**🧠 Your Digital Intelligence Entity awaits...**

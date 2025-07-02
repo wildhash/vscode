@@ -19,32 +19,18 @@ var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (
 }) : function(o, v) {
     o["default"] = v;
 });
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.watchApiProposalNamesTask = exports.compileApiProposalNamesTask = void 0;
-exports.createCompile = createCompile;
-exports.transpileTask = transpileTask;
-exports.compileTask = compileTask;
-exports.watchTask = watchTask;
+exports.watchApiProposalNamesTask = exports.compileApiProposalNamesTask = exports.watchTask = exports.compileTask = exports.transpileTask = exports.createCompile = void 0;
 const event_stream_1 = __importDefault(require("event-stream"));
 const fs_1 = __importDefault(require("fs"));
 const gulp_1 = __importDefault(require("gulp"));
@@ -121,6 +107,7 @@ function createCompile(src, { build, emitError, transpileOnly, preserveEnglish }
     pipeline.projectPath = projectPath;
     return pipeline;
 }
+exports.createCompile = createCompile;
 function transpileTask(src, out, esbuild) {
     const task = () => {
         const transpile = createCompile(src, { build: false, emitError: true, transpileOnly: { esbuild }, preserveEnglish: false });
@@ -132,9 +119,10 @@ function transpileTask(src, out, esbuild) {
     task.taskName = `transpile-${path_1.default.basename(src)}`;
     return task;
 }
+exports.transpileTask = transpileTask;
 function compileTask(src, out, build, options = {}) {
     const task = () => {
-        if (os_1.default.totalmem() < 4_000_000_000) {
+        if (os_1.default.totalmem() < 4000000000) {
             throw new Error('compilation requires 4GB of RAM');
         }
         const compile = createCompile(src, { build, emitError: true, transpileOnly: false, preserveEnglish: !!options.preserveEnglish });
@@ -172,6 +160,7 @@ function compileTask(src, out, build, options = {}) {
     task.taskName = `compile-${path_1.default.basename(src)}`;
     return task;
 }
+exports.compileTask = compileTask;
 function watchTask(out, build, srcPath = 'src') {
     const task = () => {
         const compile = createCompile(srcPath, { build, emitError: false, transpileOnly: false, preserveEnglish: false });
@@ -187,14 +176,11 @@ function watchTask(out, build, srcPath = 'src') {
     task.taskName = `watch-${path_1.default.basename(out)}`;
     return task;
 }
+exports.watchTask = watchTask;
 const REPO_SRC_FOLDER = path_1.default.join(__dirname, '../../src');
 class MonacoGenerator {
-    _isWatch;
-    stream;
-    _watchedFiles;
-    _fsProvider;
-    _declarationResolver;
     constructor(isWatch) {
+        this._executeSoonTimer = null;
         this._isWatch = isWatch;
         this.stream = event_stream_1.default.through();
         this._watchedFiles = {};
@@ -224,7 +210,6 @@ class MonacoGenerator {
             });
         }
     }
-    _executeSoonTimer = null;
     _executeSoon() {
         if (this._executeSoonTimer !== null) {
             clearTimeout(this._executeSoonTimer);

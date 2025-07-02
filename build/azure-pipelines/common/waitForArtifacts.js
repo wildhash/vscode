@@ -33,7 +33,7 @@ async function main(artifacts) {
         catch (err) {
             console.error(`ERROR: Failed to get pipeline artifacts: ${err}`);
         }
-        await new Promise(c => setTimeout(c, 30_000));
+        await new Promise(c => setTimeout(c, 30000));
     }
     throw new Error(`ERROR: Artifacts (${artifacts.join(', ')}) were not uploaded within 30 minutes.`);
 }

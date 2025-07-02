@@ -4,9 +4,7 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.printBanner = printBanner;
-exports.streamProcessOutputAndCheckResult = streamProcessOutputAndCheckResult;
-exports.spawnCodesignProcess = spawnCodesignProcess;
+exports.spawnCodesignProcess = exports.streamProcessOutputAndCheckResult = exports.printBanner = void 0;
 const zx_1 = require("zx");
 function printBanner(title) {
     title = `${title} (${new Date().toISOString()})`;
@@ -16,6 +14,7 @@ function printBanner(title) {
     console.log('#'.repeat(75));
     console.log('\n');
 }
+exports.printBanner = printBanner;
 async function streamProcessOutputAndCheckResult(name, promise) {
     const result = await promise.pipe(process.stdout);
     if (result.ok) {
@@ -24,7 +23,9 @@ async function streamProcessOutputAndCheckResult(name, promise) {
     }
     throw new Error(`${name} failed: ${result.stderr}`);
 }
+exports.streamProcessOutputAndCheckResult = streamProcessOutputAndCheckResult;
 function spawnCodesignProcess(esrpCliDLLPath, type, folder, glob) {
     return (0, zx_1.$) `node build/azure-pipelines/common/sign ${esrpCliDLLPath} ${type} ${folder} ${glob}`;
 }
+exports.spawnCodesignProcess = spawnCodesignProcess;
 //# sourceMappingURL=codesign.js.map

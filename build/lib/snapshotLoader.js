@@ -54,5 +54,5 @@ var snaps;
         fs.writeFileSync(wrappedInputFilepath, wrappedInputFile);
         cp.execFileSync(mksnapshot, [wrappedInputFilepath, `--startup_blob`, startupBlobFilepath]);
     }
-})(snaps || (exports.snaps = snaps = {}));
+})(snaps = exports.snaps || (exports.snaps = {}));
 //# sourceMappingURL=snapshotLoader.js.map

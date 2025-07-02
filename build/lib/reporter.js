@@ -7,20 +7,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createReporter = createReporter;
+exports.createReporter = void 0;
 const event_stream_1 = __importDefault(require("event-stream"));
 const fancy_log_1 = __importDefault(require("fancy-log"));
 const ansi_colors_1 = __importDefault(require("ansi-colors"));
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 class ErrorLog {
-    id;
     constructor(id) {
         this.id = id;
+        this.allErrors = [];
+        this.startTime = null;
+        this.count = 0;
     }
-    allErrors = [];
-    startTime = null;
-    count = 0;
     onStart() {
         if (this.count++ > 0) {
             return;
@@ -102,4 +101,5 @@ function createReporter(id) {
     };
     return result;
 }
+exports.createReporter = createReporter;
 //# sourceMappingURL=reporter.js.map
