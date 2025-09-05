@@ -1,0 +1,45 @@
+{
+  "name": "sis-connector",
+  "displayName": "SIS Connector",
+  "description": "Connect VS Code to the Super Intelligence API via WebSocket and REST.",
+  "version": "0.0.1",
+  "private": true,
+  "publisher": "wildhash",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other"],
+  "activationEvents": [
+    "onCommand:sis.connect",
+    "onCommand:sis.nudge"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "sis.connect", "title": "SIS: Connect" },
+      { "command": "sis.nudge", "title": "SIS: Nudge" }
+    ],
+    "configuration": {
+      "title": "SIS Connector",
+      "properties": {
+        "sis.baseUrl": {
+          "type": "string",
+          "default": "http://localhost:8000",
+          "description": "Base URL of the Super Intelligence API (e.g. http://localhost:8000)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.0",
+    "@types/vscode": "^1.85.0",
+    "@types/ws": "^8.5.10",
+    "typescript": "^5.4.0"
+  },
+  "dependencies": {
+    "ws": "^8.17.0"
+  }
+}
