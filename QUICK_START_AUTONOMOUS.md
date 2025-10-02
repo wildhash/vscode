@@ -97,8 +97,8 @@ export class AutonomousAgentService {
     }
     
     private async think(observation: any): Promise<any> {
-        // Use GPT to reason about observations
-        const prompt = `You are an autonomous coding assistant. 
+        // Use advanced LLM (GPT-5 or Claude 4.5) to reason about observations
+        const prompt = `You are an autonomous coding assistant powered by advanced AI. 
         
 Workspace State:
 - Open files: ${observation.openFiles.join(', ')}
@@ -450,7 +450,7 @@ Once this is working:
 
 ### Agent doesn't start
 - Check console for errors
-- Ensure OpenAI API key is configured
+- Ensure LLM API keys are configured (GPT-5 and/or Claude 4.5)
 - Try toggling with Ctrl+Alt+A
 
 ### No notifications

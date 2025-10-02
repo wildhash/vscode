@@ -25,7 +25,8 @@
                                 │
                                 ▼
                     ┌───────────────────────┐
-                    │    OpenAI (GPT-4o)    │
+                    │  Advanced LLMs        │
+                    │  (GPT-5/Claude 4.5)   │
                     │  - Process request    │
                     │  - Generate response  │
                     └───────────┬───────────┘
@@ -141,8 +142,8 @@ FLOW: Manual trigger → Process → Respond → Wait for next trigger
                  │                  │                   │
                  ▼                  ▼                   ▼
         ┌────────────────┐ ┌────────────────┐ ┌────────────────┐
-        │ Proactive      │ │  GPT-4o +      │ │  Action        │
-        │ Voice Output   │ │  Local Models  │ │  Executor      │
+        │ Proactive      │ │  GPT-5 +       │ │  Action        │
+        │ Voice Output   │ │  Claude 4.5    │ │  Executor      │
         │ - Speaks up    │ │  - Reasoning   │ │  - Code fixes  │
         │ - Suggests     │ │  - Generation  │ │  - Refactors   │
         │ - Warns        │ │  - Analysis    │ │  - Tests       │
@@ -209,7 +210,7 @@ FLOW: Continuous autonomous loop + Reactive to user input + Proactive suggestion
 // User must initiate
 user.speak("Fix this bug") 
   → VoiceChatService.process()
-  → OpenAI.generate() 
+  → LLM.generate() // GPT-5 or Claude 4.5 
   → TextToSpeech.speak()
   → DONE (waits for next input)
 ```
@@ -298,32 +299,33 @@ User → Voice → Text → GPT → Response → Voice → User
 
 ## Implementation Priority
 
-### Phase 1 (Weeks 1-2): Basic Autonomous Loop
+### Phase 1: Basic Autonomous Loop
 - [x] Create AutonomousAgentService
 - [x] Implement WorkspaceMonitor
 - [ ] Add basic observe-think-act cycle
 - [ ] Enable configuration toggle
 
-### Phase 2 (Weeks 3-4): Proactive Voice
+### Phase 2: Proactive Voice
 - [ ] Voice interruption handling
 - [ ] Proactive speaking capability
 - [ ] Multi-turn dialogue
 - [ ] Context preservation
 
-### Phase 3 (Weeks 5-8): Learning System
+### Phase 3: Learning System
 - [ ] Long-term memory
 - [ ] Pattern recognition
 - [ ] User preference learning
 - [ ] Knowledge consolidation
 
-### Phase 4 (Weeks 9-12): Meta-Cognition
+### Phase 4: Meta-Cognition
 - [ ] Self-evaluation
 - [ ] Performance tracking
 - [ ] Strategy optimization
 - [ ] Confidence calibration
 
-### Phase 5 (Weeks 13-16): Advanced Features
-- [ ] Multi-model support
+### Phase 5: Advanced Features
+- [ ] GPT-5 and Claude 4.5 integration
+- [ ] Intelligent model routing
 - [ ] Tool orchestration
 - [ ] Advanced workspace integration
 - [ ] Production hardening

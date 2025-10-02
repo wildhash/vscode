@@ -154,9 +154,9 @@ export class AutonomousAgentService extends Disposable implements IAutonomousAge
 	}
 	
 	private async reason(observation: IWorkspaceObservation): Promise<IAutonomousThought> {
-		// TODO: Use LLM to reason about observations
-		// Send observation to GPT-4o with prompt:
-		// "You are an autonomous coding assistant. Analyze this workspace state and decide if any action is needed."
+		// TODO: Use advanced LLM (GPT-5 or Claude 4.5) to reason about observations
+		// Send observation to LLM with prompt:
+		// "You are an autonomous coding assistant powered by advanced AI. Analyze this workspace state and decide if any action is needed."
 		
 		return {
 			observation,
