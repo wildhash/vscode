@@ -160,15 +160,32 @@ export class DeploymentService {
 			terminal.sendText(command);
 			terminal.show();
 
-			// For now, return success after a delay
-			// In a real implementation, we would parse build output
-			setTimeout(() => {
-				resolve({
-					success: true,
-					output: 'Build completed',
-					duration: 0
-				});
-			}, 10000);
+			// NOTE: VS Code Terminal API doesn't provide direct output access.
+			// The build is shown in terminal for user verification.
+			// For production use, consider:
+			// 1. VS Code Task API with problem matchers
+			// 2. Direct child_process execution with output capture
+			//
+			// Ask user to confirm build status
+			vscode.window.showInformationMessage(
+				'Build is running in terminal. Did the build succeed?',
+				'Yes - Continue',
+				'No - Failed'
+			).then(selection => {
+				if (selection === 'Yes - Continue') {
+					resolve({
+						success: true,
+						output: 'Build confirmed by user',
+						duration: 0
+					});
+				} else {
+					resolve({
+						success: false,
+						error: 'Build failed - user reported failure',
+						duration: 0
+					});
+				}
+			});
 		});
 	}
 
@@ -297,11 +314,25 @@ export class DeploymentService {
 			terminal.sendText(command);
 			terminal.show();
 
-			// For now, resolve after a delay
-			// In a real implementation, we would monitor deployment status
-			setTimeout(() => {
-				resolve();
-			}, 15000);
+			// NOTE: Deployment commands typically output status to the terminal.
+			// Since VS Code Terminal API doesn't provide direct output access,
+			// we ask the user to confirm deployment status.
+			//
+			// For production use, consider:
+			// 1. Platform-specific CLI output parsing
+			// 2. Polling deployment API endpoints
+			// 3. Webhook callbacks for deployment status
+			vscode.window.showInformationMessage(
+				'Deployment is running. Did the deployment succeed?',
+				'Yes - Deployed',
+				'No - Failed'
+			).then(selection => {
+				if (selection === 'Yes - Deployed') {
+					resolve();
+				} else {
+					reject(new Error('Deployment failed - user reported failure'));
+				}
+			});
 		});
 	}
 

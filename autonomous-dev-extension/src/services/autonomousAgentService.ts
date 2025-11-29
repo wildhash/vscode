@@ -179,8 +179,10 @@ export class AutonomousAgentService {
 				return;
 			}
 
-			// 4. Execute suggested action if appropriate
-			if (thought.suggestedAction && thought.confidence > 0.7) {
+			// 4. Execute suggested action if appropriate (use configurable threshold)
+			const config = vscode.workspace.getConfiguration('autonomousdev');
+			const autoFixThreshold = (config.get<number>('autoFixThreshold', 80) / 100);
+			if (thought.suggestedAction && thought.confidence > autoFixThreshold) {
 				await this._executeAction(thought.suggestedAction);
 			}
 
@@ -342,6 +344,10 @@ Respond in JSON format:
 			if (jsonMatch) {
 				const parsed = JSON.parse(jsonMatch[0]);
 
+				// Use configurable threshold
+				const config = vscode.workspace.getConfiguration('autonomousdev');
+				const autoFixThreshold = config.get<number>('autoFixThreshold', 80);
+
 				const thought: AutonomousThought = {
 					observation,
 					reasoning: parsed.reasoning || 'No reasoning provided',
@@ -355,7 +361,7 @@ Respond in JSON format:
 						type: parsed.action,
 						description: parsed.reasoning,
 						priority: parsed.priority || 'medium',
-						autoExecute: parsed.confidence > 80 && !parsed.requiresIntervention
+						autoExecute: parsed.confidence >= autoFixThreshold && !parsed.requiresIntervention
 					};
 				}
 

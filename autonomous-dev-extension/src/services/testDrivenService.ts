@@ -300,18 +300,32 @@ Generate the complete test file.`;
 			terminal.sendText(command);
 			terminal.show();
 
-			// For now, return a placeholder result
-			// In a real implementation, we would parse the test output
-			setTimeout(() => {
-				resolve({
-					status: 'passed',
-					passedCount: 0,
-					failedCount: 0,
-					errorCount: 0,
-					duration: 0,
-					tests: []
-				});
-			}, 5000);
+			// NOTE: VS Code Terminal API doesn't provide direct output access.
+			// In production, consider using:
+			// 1. Task API with problem matchers for test output parsing
+			// 2. Direct child_process execution with output parsing
+			// 3. Test framework-specific extensions (e.g., Jest Runner)
+			//
+			// For now, we show the terminal for user verification and return
+			// a 'running' status. The user should check the terminal for actual results.
+			vscode.window.showInformationMessage(
+				'Tests are running in terminal. Please check the terminal for results.',
+				'View Terminal'
+			).then(selection => {
+				if (selection === 'View Terminal') {
+					terminal.show();
+				}
+			});
+
+			// Return running status - actual result verification is manual
+			resolve({
+				status: 'running',
+				passedCount: 0,
+				failedCount: 0,
+				errorCount: 0,
+				duration: 0,
+				tests: []
+			});
 		});
 	}
 
