@@ -1,8 +1,8 @@
 {
   "name": "autonomous-dev-assistant",
   "displayName": "Autonomous Development Assistant",
-  "description": "Voice-to-voice autonomous software engineering assistant powered by GPT-4o",
-  "version": "0.1.0",
+  "description": "Fully autonomous software engineering assistant with TDD and deployment capabilities powered by GPT-4o",
+  "version": "0.2.0",
   "publisher": "wildhash",
   "engines": {
     "vscode": "^1.74.0"
@@ -10,6 +10,7 @@
   "categories": [
     "AI",
     "Chat",
+    "Testing",
     "Other"
   ],
   "keywords": [
@@ -19,7 +20,10 @@
     "autonomous",
     "gpt-4",
     "chat",
-    "development"
+    "development",
+    "tdd",
+    "deployment",
+    "ci-cd"
   ],
   "activationEvents": [
     "onCommand:autonomousdev.openChat",
@@ -45,6 +49,66 @@
         "title": "Clear Chat History",
         "category": "Autonomous Dev",
         "icon": "$(clear-all)"
+      },
+      {
+        "command": "autonomousdev.toggleAutonomous",
+        "title": "Toggle Autonomous Mode",
+        "category": "Autonomous Dev",
+        "icon": "$(robot)"
+      },
+      {
+        "command": "autonomousdev.startTask",
+        "title": "Start Autonomous Task",
+        "category": "Autonomous Dev",
+        "icon": "$(play)"
+      },
+      {
+        "command": "autonomousdev.continueTask",
+        "title": "Continue Task (After Intervention)",
+        "category": "Autonomous Dev",
+        "icon": "$(debug-continue)"
+      },
+      {
+        "command": "autonomousdev.abortTask",
+        "title": "Abort Current Task",
+        "category": "Autonomous Dev",
+        "icon": "$(stop)"
+      },
+      {
+        "command": "autonomousdev.showInterventions",
+        "title": "Show Pending Interventions",
+        "category": "Autonomous Dev",
+        "icon": "$(alert)"
+      },
+      {
+        "command": "autonomousdev.runTests",
+        "title": "Run Tests",
+        "category": "Autonomous Dev",
+        "icon": "$(beaker)"
+      },
+      {
+        "command": "autonomousdev.writeTests",
+        "title": "Generate Tests for Current File",
+        "category": "Autonomous Dev",
+        "icon": "$(file-code)"
+      },
+      {
+        "command": "autonomousdev.build",
+        "title": "Build Project",
+        "category": "Autonomous Dev",
+        "icon": "$(tools)"
+      },
+      {
+        "command": "autonomousdev.deploy",
+        "title": "Deploy to Production",
+        "category": "Autonomous Dev",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "autonomousdev.setupDeployment",
+        "title": "Setup Deployment Configuration",
+        "category": "Autonomous Dev",
+        "icon": "$(gear)"
       }
     ],
     "viewsContainers": {
@@ -75,6 +139,26 @@
         "command": "autonomousdev.toggleVoice",
         "key": "ctrl+shift+v",
         "mac": "cmd+shift+v"
+      },
+      {
+        "command": "autonomousdev.toggleAutonomous",
+        "key": "ctrl+alt+a",
+        "mac": "cmd+alt+a"
+      },
+      {
+        "command": "autonomousdev.startTask",
+        "key": "ctrl+alt+t",
+        "mac": "cmd+alt+t"
+      },
+      {
+        "command": "autonomousdev.runTests",
+        "key": "ctrl+alt+r",
+        "mac": "cmd+alt+r"
+      },
+      {
+        "command": "autonomousdev.deploy",
+        "key": "ctrl+alt+d",
+        "mac": "cmd+alt+d"
       }
     ],
     "configuration": {
@@ -97,22 +181,26 @@
         },
         "autonomousdev.voiceSpeed": {
           "type": "number",
-          "default": 1.0,
+          "default": 1,
           "minimum": 0.1,
-          "maximum": 3.0,
+          "maximum": 3,
           "description": "Speech synthesis speed"
         },
         "autonomousdev.voicePitch": {
           "type": "number",
-          "default": 1.0,
-          "minimum": 0.0,
-          "maximum": 2.0,
+          "default": 1,
+          "minimum": 0,
+          "maximum": 2,
           "description": "Speech synthesis pitch"
         },
         "autonomousdev.model": {
           "type": "string",
           "default": "gpt-4o",
-          "enum": ["gpt-4o", "gpt-4", "gpt-3.5-turbo"],
+          "enum": [
+            "gpt-4o",
+            "gpt-4",
+            "gpt-3.5-turbo"
+          ],
           "description": "OpenAI model to use"
         },
         "autonomousdev.maxTokens": {
@@ -123,9 +211,75 @@
         "autonomousdev.temperature": {
           "type": "number",
           "default": 0.7,
-          "minimum": 0.0,
-          "maximum": 2.0,
+          "minimum": 0,
+          "maximum": 2,
           "description": "Response creativity (0 = deterministic, 2 = very creative)"
+        },
+        "autonomousdev.autoStartAutonomous": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically start autonomous mode when VS Code starts"
+        },
+        "autonomousdev.thinkingInterval": {
+          "type": "number",
+          "default": 10000,
+          "minimum": 5000,
+          "maximum": 60000,
+          "description": "How often (in ms) the autonomous agent should analyze the workspace"
+        },
+        "autonomousdev.autoFixThreshold": {
+          "type": "number",
+          "default": 80,
+          "minimum": 50,
+          "maximum": 100,
+          "description": "Confidence threshold (0-100) for automatic fixes without confirmation"
+        },
+        "autonomousdev.maxErrorRetries": {
+          "type": "number",
+          "default": 3,
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Maximum retries before requesting human intervention"
+        },
+        "autonomousdev.enableTDD": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Test-Driven Development workflow"
+        },
+        "autonomousdev.testFramework": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "jest",
+            "mocha",
+            "vitest"
+          ],
+          "description": "Test framework to use (auto-detect by default)"
+        },
+        "autonomousdev.enableAutoDeployment": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable automatic deployment after successful builds"
+        },
+        "autonomousdev.deploymentTarget": {
+          "type": "string",
+          "default": "auto",
+          "enum": [
+            "auto",
+            "vercel",
+            "netlify",
+            "github-pages",
+            "fly",
+            "railway",
+            "custom"
+          ],
+          "description": "Deployment target platform"
+        },
+        "autonomousdev.requireDeploymentConfirmation": {
+          "type": "boolean",
+          "default": true,
+          "description": "Require confirmation before deploying to production"
         }
       }
     }
@@ -139,15 +293,16 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
-    "@types/vscode": "^1.74.0",
+    "@types/mocha": "^10.0.10",
     "@types/node": "16.x",
+    "@types/vscode": "^1.74.0",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "eslint": "^8.28.0",
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "openai": "^4.20.0",
-    "axios": "^1.6.0"
+    "axios": "^1.6.0",
+    "openai": "^4.20.0"
   }
 }
